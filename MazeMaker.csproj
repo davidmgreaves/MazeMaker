@@ -85,8 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Cell.cs" />
+    <Compile Include="Assets\Scripts\MazeAlgorithm.cs" />
     <Compile Include="Assets\Scripts\MazeMaker.cs" />
     <Compile Include="Assets\Scripts\MazeManager.cs" />
+    <Compile Include="Assets\Scripts\RecursiveBacktrackingAlgorithm.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

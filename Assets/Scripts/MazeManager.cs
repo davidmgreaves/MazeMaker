@@ -6,7 +6,12 @@ public class MazeManager : MonoBehaviour {
 
 	public MazeMaker mazeMaker;
 
+	public bool UsesDestructiveAlgorithm { get; set; }
+
 	void Start () {
+
+		UsesDestructiveAlgorithm = true;
+
 		LoadMaze();
 	}
 
@@ -19,9 +24,16 @@ public class MazeManager : MonoBehaviour {
 	}
 	
 	void LoadMaze () {
-		//mazeMakerInstance = Instantiate(mazeMakerPrefab) as MazeMaker;
-		//mazeMakerInstance.BuildTheEggCarton();
-		StartCoroutine(mazeMaker.BuildTheEggCarton());
+
+		if (UsesDestructiveAlgorithm)
+		{
+			StartCoroutine(mazeMaker.BuildTheEggCarton());
+		}
+		else
+		{
+			StartCoroutine(mazeMaker.GenerateCells());
+		}
+		
 	}
 
 	void RestartMaze ()

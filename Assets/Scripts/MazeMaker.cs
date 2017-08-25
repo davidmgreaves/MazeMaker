@@ -19,6 +19,42 @@ public class MazeMaker : MonoBehaviour {
 	public int VisitedCells { get; private set; }
 	public int TotalCells { get; private set; }
 
+	// method used to create a grid of cells without any walls to be used with additive maze algorithms
+	public IEnumerator GenerateCells()
+	{
+		WaitForSeconds delay = new WaitForSeconds(0.2f);
+
+		Columns = 5;
+		Rows = 5;
+		WallLength = 2;
+		TotalCells = Rows * Columns;
+
+		// the grid extends from the initialPosition to the right of the initalPositions x and z location, the initialPosition is effectively
+		// determined by starting at the worlds origin, and moving in the negative of the X and Z directions, by half of the columns and rows 
+		// respectively. This ensures the maze is always centered on the screen, irrespective of the number of rows and columns specified
+		InitialPosition = new Vector3((-Columns / 2) + WallLength / 2, 0.0f, (-Rows / 2) + WallLength / 2);
+
+		CurrentPosition = InitialPosition;
+		Cells = new Cell[(int)Rows, (int)Columns];
+
+		for (int x = 0; x < Rows; x++)
+		{
+			for (int z = 0; z < Columns; z++)
+			{
+				yield return delay;
+
+				// creates a cell at the current position, instantiates a floor for the cell and adds the cell to the 
+				// collection of existing cells
+				CurrentPosition = new Vector3(InitialPosition.x + z * WallLength - WallLength / 2, 0.0f, InitialPosition.z + x * WallLength - WallLength / 2);
+				Cell currentCell = new Cell();
+				currentCell.Floor = Instantiate(floorPrefab, CurrentPosition, Quaternion.identity) as GameObject;
+				Cells[x, z] = currentCell;
+
+			}
+		}
+	}
+
+	// method used to create a grid of cells with four walls to be used with destructive maze algorithms
 	public IEnumerator BuildTheEggCarton()
 	{
 		WaitForSeconds delay = new WaitForSeconds(0.2f);
@@ -31,9 +67,9 @@ public class MazeMaker : MonoBehaviour {
 		WallLength = 2;
 		TotalCells = Rows * Columns;
 
-		// the egg carton extends from the initialPosition to the right of the initalPositions x and z location, the initialPosition is effectively
-		// determined by moving in the negative of the X and Z directions, by half of the columns and rows respectively. This ensures the maze is always
-		// centered on the screen, irrespective of the number of rows and columns specified
+		// the grid extends from the initialPosition to the right of the initalPositions x and z location, the initialPosition is effectively
+		// determined by starting at the worlds origin, and moving in the negative of the X and Z directions, by half of the columns and rows 
+		// respectively. This ensures the maze is always centered on the screen, irrespective of the number of rows and columns specified
 		InitialPosition = new Vector3((-Columns / 2) + WallLength / 2, 0.0f, (-Rows / 2) + WallLength / 2);
 
 		CurrentPosition = InitialPosition;
@@ -45,7 +81,8 @@ public class MazeMaker : MonoBehaviour {
 			{
 				yield return delay;
 
-				// creates a cell at the current position and instantiates a floor and four walls for the cell
+				// creates a cell at the current position, instantiates a floor and four walls for the cell and adds the cell to 
+				// the collection of existing cells
 				CurrentPosition = new Vector3(InitialPosition.x + z * WallLength - WallLength / 2, 0.0f,InitialPosition.z + x * WallLength - WallLength / 2);
 				Cell currentCell = new Cell();
 				currentCell.Floor = Instantiate(floorPrefab, CurrentPosition, Quaternion.identity) as GameObject;
@@ -80,31 +117,7 @@ public class MazeMaker : MonoBehaviour {
 				// above and directly to the right...
 
 				Cells[x, z] = currentCell;
-
 			}
-		}
-	}
-
-	// add maze carving behaviour- create seperate class for maze algorithms?? maybe an interface...
-	public IEnumerator CarveTheMaze ()
-	{
-		WaitForSeconds delay = new WaitForSeconds(0.1f);
-
-		// pick a random cell to start the maze from - create a seed based random class to handle this
-		// set the cells visited boolean to true
-		VisitedCells = 1;
-
-		while ( VisitedCells < TotalCells)
-		{
-			yield return delay;
-
-			// do choose a random direction to move in (north, south, east or west)
-			// if the cell directly adjacent to the current cell in the above direction is unvisited, destroy the adjoining wall and move to that cell,
-			//		else pick a new direction. If all adjacent cells have been visited, move back to the first available cell in the cookietrail with at
-			//		least one neighbouring cell that is unvisited.
-			//			if there is no such cells remaining randomly select a new cell from the list of unvisited cells and repeat the previous step
-			// Add the previous cell to the cookie trail for backtracking purposes, and repeat the previous step for the current cell
-			// Once the number of visited cells is no longer less than the number of total cells the maze has been completed
 		}
 	}
 
