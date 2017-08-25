@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class MazeManager : MonoBehaviour {
 
-	public MazeMaker mazeMakerPrefab;
-
-	private MazeMaker mazeMakerInstance;
+	public MazeMaker mazeMaker;
 
 	void Start () {
 		LoadMaze();
@@ -14,19 +12,21 @@ public class MazeManager : MonoBehaviour {
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Enter))
+		if (Input.GetKeyDown(KeyCode.Return))
 		{
 			RestartMaze();
 		}
 	}
 	
 	void LoadMaze () {
-		mazeMakerInstance = Instantiate(mazeMakerPrefab) as MazeMaker;
+		//mazeMakerInstance = Instantiate(mazeMakerPrefab) as MazeMaker;
+		//mazeMakerInstance.BuildTheEggCarton();
+		StartCoroutine(mazeMaker.BuildTheEggCarton());
 	}
 
 	void RestartMaze ()
 	{
-		Destoy(mazeMakerInstance.gameObject);
-		LoadMaze;
+		Destroy(mazeMaker.gameObject);
+		LoadMaze();
 	}
 }
