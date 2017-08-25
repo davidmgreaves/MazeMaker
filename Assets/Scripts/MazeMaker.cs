@@ -15,6 +15,9 @@ public class MazeMaker : MonoBehaviour {
 	public Vector3 BoardCenter { get; private set; }
 	public Vector3 InitialPosition { get; private set; }
 	public Vector3 CurrentPosition { get; private set; }
+	public List<int> CookieTrail { get; private set; }
+	public int VisitedCells { get; private set; }
+	public int TotalCells { get; private set; }
 
 	public IEnumerator BuildTheEggCarton()
 	{
@@ -26,6 +29,7 @@ public class MazeMaker : MonoBehaviour {
 		Columns = 5;
 		Rows = 5;
 		WallLength = 2;
+		TotalCells = Rows * Columns;
 
 		// the egg carton extends from the initialPosition to the right of the initalPositions x and z location, the initialPosition is effectively
 		// determined by moving in the negative of the X and Z directions, by half of the columns and rows respectively. This ensures the maze is always
@@ -86,7 +90,22 @@ public class MazeMaker : MonoBehaviour {
 	{
 		WaitForSeconds delay = new WaitForSeconds(0.1f);
 
-		yield return delay;
+		// pick a random cell to start the maze from - create a seed based random class to handle this
+		// set the cells visited boolean to true
+		VisitedCells = 1;
+
+		while ( VisitedCells < TotalCells)
+		{
+			yield return delay;
+
+			// do choose a random direction to move in (north, south, east or west)
+			// if the cell directly adjacent to the current cell in the above direction is unvisited, destroy the adjoining wall and move to that cell,
+			//		else pick a new direction. If all adjacent cells have been visited, move back to the first available cell in the cookietrail with at
+			//		least one neighbouring cell that is unvisited.
+			//			if there is no such cells remaining randomly select a new cell from the list of unvisited cells and repeat the previous step
+			// Add the previous cell to the cookie trail for backtracking purposes, and repeat the previous step for the current cell
+			// Once the number of visited cells is no longer less than the number of total cells the maze has been completed
+		}
 	}
 
 }
