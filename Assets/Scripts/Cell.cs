@@ -14,11 +14,10 @@ public class Cell {
 	public int Column { get; set; }
 	public int Row { get; set; }
 
-
-	public Cell(int x, int z, int cellCount)
+	public Cell(int row, int column, int cellCount)
 	{
-		Row = x;
-		Column = z;
+		Row = row;
+		Column = column;
 		Index = cellCount;
 		Visited = false;
 	}

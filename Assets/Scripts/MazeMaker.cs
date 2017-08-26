@@ -25,6 +25,7 @@ public class MazeMaker : MonoBehaviour {
 	public int VisitedCells { get; private set; }
 	public int TotalCells { get; private set; }
 	public int cellCount { get; set; }
+	public RecursiveBacktrackingAlgorithm recursiveBacktrackingMaze { get; set; }
 
 	// method used to create a grid of cells without any walls to be used with additive maze algorithms
 	public IEnumerator GenerateCells()
@@ -157,6 +158,9 @@ public class MazeMaker : MonoBehaviour {
 				Cells[x, z] = currentCell;
 			}
 		}
+
+		recursiveBacktrackingMaze = new RecursiveBacktrackingAlgorithm(Cells);
+		recursiveBacktrackingMaze.CreateMaze();
 	}
 
 }
