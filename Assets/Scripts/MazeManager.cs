@@ -31,11 +31,11 @@ public class MazeManager : MonoBehaviour {
 
 		if (UsesDestructiveAlgorithm)
 		{
-			StartCoroutine(mazeMaker.BuildTheEggCarton(Rows, Columns, Delay));
+			mazeMaker.BuildTheEggCarton(Rows, Columns, Delay);
 		}
 		else
 		{
-			StartCoroutine(mazeMaker.GenerateCells(Rows, Columns, Delay));
+			mazeMaker.GenerateCells(Rows, Columns, Delay);
 		}
 		
 	}
