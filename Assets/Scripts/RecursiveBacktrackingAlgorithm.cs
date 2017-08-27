@@ -7,7 +7,6 @@ using UnityEngine;
 public class RecursiveBacktrackingAlgorithm : MazeAlgorithm {
 
 	public List<Cell> CookieTrail { get; set; }
-	//protected enum direction { North = 1, South = 2, East = 3, West = 4 }
 
 	public RecursiveBacktrackingAlgorithm(Cell[,] cells) : base(cells)
 	{
@@ -19,26 +18,11 @@ public class RecursiveBacktrackingAlgorithm : MazeAlgorithm {
 
 	public override void CreateMaze()
 	{
-
-		List<Stack.direction> availableDirections = null;
+		List<Stack.Direction> availableDirections = null;
 		Cell neighbour = null;
 
-		while (VisitedCells < Stack.TotalCells)
+		while (VisitedCells < Stack.TotalCells)		// create Coroutine variant for visualising the maze creation as an option in the web player
 		{
-
-			//try
-			//{
-			//	availableDirections = Stack.GetListOfUnvisitedNeighbours(CurrentCell);
-			//	neighbour = Stack.GetRandomNeighbour(CurrentCell, availableDirections);
-			//}
-			//catch (Exception e)
-			//{
-			//	CurrentCell = CookieTrail.ElementAt(CookieTrail.Count - 1);
-			//	CookieTrail.RemoveAt(CookieTrail.Count - 1);
-			//	availableDirections = Stack.GetListOfUnvisitedNeighbours(CurrentCell);
-			//	neighbour = Stack.GetRandomNeighbour(CurrentCell, availableDirections);
-			//}
-
 			availableDirections = Stack.GetListOfUnvisitedNeighbours(CurrentCell);
 
 			if(availableDirections.Count > 0)
@@ -48,11 +32,12 @@ public class RecursiveBacktrackingAlgorithm : MazeAlgorithm {
 				if (Stack.CellHasNotBeenVisited(neighbour))
 				{
 					DestroyAdjoiningWall(CurrentCell, neighbour);
-					CookieTrail.Add(CurrentCell); // is this reference or value?
+					CookieTrail.Add(CurrentCell);
 					CurrentCell = neighbour;
 					CurrentCell.Visited = true;
 					VisitedCells++;
 				}
+
 				else
 				{
 					CurrentCell = CookieTrail.ElementAt(CookieTrail.Count - 1);

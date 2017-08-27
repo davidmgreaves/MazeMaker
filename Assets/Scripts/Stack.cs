@@ -9,7 +9,7 @@ public class Stack {
 	public int Rows { get; set; }
 	public int Columns { get; set; }
 	public int TotalCells { get; set; }
-	public enum direction { North = 1, South = 2, East = 3, West = 4, None = 0 }
+	public enum Direction { North = 1, South = 2, East = 3, West = 4, None = 0 }
 
 	public Stack(Cell[,] cells)
 	{
@@ -50,14 +50,14 @@ public class Stack {
 	}
 
 	// performs a bounds check to see if the cell has an adjacent cell in the direction passed as a parameter
-	public bool CurrentCellHasNeighbour(Cell currentCell, direction dir) 
+	public bool CurrentCellHasNeighbour(Cell currentCell, Direction dir) 
 	{
 		// if the current cell is not on one of the mazes edges, the resulting value will always be true
 		bool hasNeighbour = true;
 
 		switch (dir)
 		{
-			case direction.North:
+			case Direction.North:
 
 				// checks if the cell is in the last row, there is no northern neighbour if this statement evaluates to true
 				if (currentCell.Row == (Rows - 1))
@@ -65,21 +65,21 @@ public class Stack {
 
 				break;
 
-			case direction.South:
+			case Direction.South:
 
 				if (currentCell.Row == 0)
 					hasNeighbour = false;
 
 				break;
 
-			case direction.East:
+			case Direction.East:
 
 				if (currentCell.Column == Columns - 1)
 					hasNeighbour = false;
 
 				break;
 
-			case direction.West:
+			case Direction.West:
 
 				if (currentCell.Column == 0)
 					hasNeighbour = false;
@@ -91,7 +91,7 @@ public class Stack {
 	}
 
 	// Returns a boolean indicating weather the adjacent cell in the direction passed as a parameter has not been visited
-	public bool NeighbourHasNotBeenVisited(Cell currentCell, direction dir)
+	public bool NeighbourHasNotBeenVisited(Cell currentCell, Direction dir)
 	{
 		bool neighbourIsUnvisited = false;
 
@@ -102,28 +102,28 @@ public class Stack {
 	}
 
 	// Returns a collection of directions where the current cell has an adjacent unvisited cell
-	public List<direction> GetListOfUnvisitedNeighbours(Cell currentCell)
+	public List<Direction> GetListOfUnvisitedNeighbours(Cell currentCell)
 	{
-		List<direction> validDirections = new List<direction>();
+		List<Direction> validDirections = new List<Direction>();
 
-		if (CurrentCellHasNeighbour(currentCell, direction.North) && NeighbourHasNotBeenVisited(currentCell, direction.North))
+		if (CurrentCellHasNeighbour(currentCell, Direction.North) && NeighbourHasNotBeenVisited(currentCell, Direction.North))
 		{
-			validDirections.Add(direction.North);
+			validDirections.Add(Direction.North);
 		}
 
-		if (CurrentCellHasNeighbour(currentCell, direction.South) && NeighbourHasNotBeenVisited(currentCell, direction.South))
+		if (CurrentCellHasNeighbour(currentCell, Direction.South) && NeighbourHasNotBeenVisited(currentCell, Direction.South))
 		{
-			validDirections.Add(direction.South);
+			validDirections.Add(Direction.South);
 		}
 
-		if (CurrentCellHasNeighbour(currentCell, direction.East) && NeighbourHasNotBeenVisited(currentCell, direction.East))
+		if (CurrentCellHasNeighbour(currentCell, Direction.East) && NeighbourHasNotBeenVisited(currentCell, Direction.East))
 		{
-			validDirections.Add(direction.East);
+			validDirections.Add(Direction.East);
 		}
 
-		if (CurrentCellHasNeighbour(currentCell, direction.West) && NeighbourHasNotBeenVisited(currentCell, direction.West))
+		if (CurrentCellHasNeighbour(currentCell, Direction.West) && NeighbourHasNotBeenVisited(currentCell, Direction.West))
 		{
-			validDirections.Add(direction.West);
+			validDirections.Add(Direction.West);
 		}
 
 		return validDirections;
@@ -131,29 +131,29 @@ public class Stack {
 
 	// returns the adjacent cell in the direction passed as a parameter- this method assumes that there is a valid neighbouring cell in the direction
 	// supplied, bounds testing needs to be performed by the calling class with the HasNeighbour() method, prior to calling this method
-	public Cell GetNeighbour(Cell currentCell, direction dir) 
+	public Cell GetNeighbour(Cell currentCell, Direction dir) 
 	{
 		Cell neighbour = null;
 		int index = 0;
 
 		switch (dir)
 		{
-			case direction.North:
+			case Direction.North:
 				index = currentCell.Index + Columns;
 				neighbour = GetCell(index);
 				break;
 
-			case direction.South:
+			case Direction.South:
 				index = currentCell.Index - Columns;
 				neighbour = GetCell(index);
 				break;
 
-			case direction.East:
+			case Direction.East:
 				index = currentCell.Index + 1;
 				neighbour = GetCell(index);
 				break;
 
-			case direction.West:
+			case Direction.West:
 				index = currentCell.Index - 1;
 				neighbour = GetCell(index);
 				break;
@@ -163,14 +163,13 @@ public class Stack {
 	}
 
 	// Returns an adjacent cell by first choosing a random direction, if that cell has already been visited, the method will instead return a nulled cell
-	public Cell GetRandomNeighbour(Cell currentCell, List<direction> validDirections)
+	public Cell GetRandomNeighbour(Cell currentCell, List<Direction> validDirections)
 	{																  
 		Cell unvisited = null;
 		List<Cell> availableCells = new List<Cell>();
 
-		foreach(direction dir in validDirections)
+		foreach(Direction dir in validDirections)
 		{
-			Debug.Log("Direction: " + dir); 
 			if (CurrentCellHasNeighbour(currentCell, dir) && NeighbourHasNotBeenVisited(currentCell, dir))
 			{
 				unvisited = GetNeighbour(currentCell, dir);
