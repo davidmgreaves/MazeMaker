@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Stack : MonoBehaviour {
+public class Stack {
 
 	public Cell[,] Cells { get; set; }
 	public int Rows { get; set; }
 	public int Columns { get; set; }
 	public int TotalCells { get; set; }
-
-	protected enum direction { North = 1, South = 2, East = 3, West = 4 }
+	public enum direction { North = 1, South = 2, East = 3, West = 4, None = 0 }
 
 	public Stack(Cell[,] cells)
 	{
@@ -40,8 +39,18 @@ public class Stack : MonoBehaviour {
 		return GetCell(index);
 	}
 
+	public bool CellHasNotBeenVisited(Cell currentCell)
+	{
+		bool cellIsUnvisited = false;
+
+		if (currentCell.Visited == false)
+			cellIsUnvisited = true;
+
+		return cellIsUnvisited;
+	}
+
 	// performs a bounds check to see if the cell has an adjacent cell in the direction passed as a parameter
-	protected bool CurrentCellHasNeighbour(Cell currentCell, direction dir) 
+	public bool CurrentCellHasNeighbour(Cell currentCell, direction dir) 
 	{
 		// if the current cell is not on one of the mazes edges, the resulting value will always be true
 		bool hasNeighbour = true;
@@ -82,7 +91,7 @@ public class Stack : MonoBehaviour {
 	}
 
 	// Returns a boolean indicating weather the adjacent cell in the direction passed as a parameter has not been visited
-	protected bool NeighbourHasNotBeenVisited(Cell currentCell, direction dir)
+	public bool NeighbourHasNotBeenVisited(Cell currentCell, direction dir)
 	{
 		bool neighbourIsUnvisited = false;
 
@@ -93,9 +102,9 @@ public class Stack : MonoBehaviour {
 	}
 
 	// Returns a collection of directions where the current cell has an adjacent unvisited cell
-	protected List<direction> GetListOfUnvisitedNeighbours(Cell currentCell)
+	public List<direction> GetListOfUnvisitedNeighbours(Cell currentCell)
 	{
-		List<direction> validDirections = null;
+		List<direction> validDirections = new List<direction>();
 
 		if (CurrentCellHasNeighbour(currentCell, direction.North) && NeighbourHasNotBeenVisited(currentCell, direction.North))
 		{
@@ -122,7 +131,7 @@ public class Stack : MonoBehaviour {
 
 	// returns the adjacent cell in the direction passed as a parameter- this method assumes that there is a valid neighbouring cell in the direction
 	// supplied, bounds testing needs to be performed by the calling class with the HasNeighbour() method, prior to calling this method
-	protected Cell GetNeighbour(Cell currentCell, direction dir) 
+	public Cell GetNeighbour(Cell currentCell, direction dir) 
 	{
 		Cell neighbour = null;
 		int index = 0;
@@ -154,19 +163,43 @@ public class Stack : MonoBehaviour {
 	}
 
 	// Returns an adjacent cell by first choosing a random direction, if that cell has already been visited, the method will instead return a nulled cell
-	protected Cell GetRandomNeighbour(Cell currentCell, List<direction> validDirections)
+	public Cell GetRandomNeighbour(Cell currentCell, List<direction> validDirections)
 	{																  
-		Cell unvisited = null;										  
+		Cell unvisited = null;
+		List<Cell> availableCells = new List<Cell>();
 
 		foreach(direction dir in validDirections)
 		{
+			Debug.Log("Direction: " + dir); 
 			if (CurrentCellHasNeighbour(currentCell, dir) && NeighbourHasNotBeenVisited(currentCell, dir))
 			{
 				unvisited = GetNeighbour(currentCell, dir);
+				availableCells.Add(unvisited);
 			}
 		}
 
+		unvisited = availableCells[UnityEngine.Random.Range(0, availableCells.Count)];
+
 		return unvisited;
 
+	}
+
+	public GameObject GetAdjoiningWall(Cell currentCell, Cell neighbour)
+	{
+		if (currentCell.Index == neighbour.Index - Columns)
+			return currentCell.NorthWall;
+			
+
+		if (currentCell.Index == neighbour.Index + Columns)
+			return currentCell.SouthWall;
+
+		if (currentCell.Index == neighbour.Index - 1)
+			return currentCell.EastWall;
+
+		if (currentCell.Index == neighbour.Index + 1)
+			return currentCell.WestWall;
+
+		Debug.Log("Something went horribly wrong in Stack.GetAdjoiningWall");
+		return null;
 	}
 }

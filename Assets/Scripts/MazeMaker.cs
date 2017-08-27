@@ -29,7 +29,7 @@ public class MazeMaker : MonoBehaviour {
 	public RecursiveBacktrackingAlgorithm recursiveBacktrackingMaze { get; set; }
 
 	// method used to create a grid of cells without any walls to be used with additive maze algorithms
-	public IEnumerator GenerateCells()
+	public IEnumerator GenerateCells( int rows, int columns)
 	{
 		WaitForSeconds delay = new WaitForSeconds(0.2f);
 
@@ -37,8 +37,8 @@ public class MazeMaker : MonoBehaviour {
 		allFloorTiles = new GameObject();
 		allFloorTiles.name = "Floor Tiles";
 
-		Columns = 5;
-		Rows = 5;
+		Rows = rows;
+		Columns = columns;
 		WallLength = 2;
 		TotalCells = Rows * Columns;
 		cellCount = 1;
@@ -71,7 +71,7 @@ public class MazeMaker : MonoBehaviour {
 	}
 
 	// method used to create a grid of cells with four walls to be used with destructive maze algorithms
-	public IEnumerator BuildTheEggCarton()
+	public IEnumerator BuildTheEggCarton(int rows, int columns)
 	{
 		WaitForSeconds delay = new WaitForSeconds(0.2f);
 
@@ -94,8 +94,8 @@ public class MazeMaker : MonoBehaviour {
 		allFloorTiles = new GameObject();
 		allFloorTiles.name = "Floor Tiles";
 
-		Columns = 3;
-		Rows = 3;
+		Rows = rows;
+		Columns = columns;
 		WallLength = 2;
 		TotalCells = Rows * Columns;
 		cellCount = 1;
@@ -122,38 +122,52 @@ public class MazeMaker : MonoBehaviour {
 				currentCell.Floor.transform.parent = allFloorTiles.transform;
 				currentCell.Floor.name = "Floor " + currentCell.Index.ToString();
 
-				// all cells get a south and a west wall
+				// all cells get their own north and an east wall instantiated
+				CurrentPosition = new Vector3(InitialPosition.x + (z * WallLength) - WallLength / 2, 0.0f, InitialPosition.z + (x * WallLength));
+				currentCell.NorthWall = Instantiate(wallPrefab, CurrentPosition, Quaternion.identity) as GameObject;
+				currentCell.NorthWall.name = "North Wall " + currentCell.Index.ToString();
+				currentCell.NorthWall.transform.parent = northWalls.transform;
+
+				CurrentPosition = new Vector3(InitialPosition.x + (z * WallLength), 0.0f, InitialPosition.z + (x * WallLength) - WallLength / 2);
+				currentCell.EastWall = Instantiate(wallPrefab, CurrentPosition, Quaternion.identity) as GameObject;
+				currentCell.EastWall.transform.Rotate(0.0f, 90.0f, 0.0f);
+				currentCell.EastWall.name = "East Wall " + currentCell.Index.ToString();
+				currentCell.EastWall.transform.parent = eastWalls.transform;
+
+				// but only cells in the first row and column get a south and a west well instantiate too
 				CurrentPosition = new Vector3(InitialPosition.x + (z * WallLength) - WallLength / 2, 0.0f, InitialPosition.z + (x * WallLength) - WallLength);
-				currentCell.SouthWall = Instantiate(wallPrefab, CurrentPosition, Quaternion.identity) as GameObject;
-				currentCell.SouthWall.name = "South Wall " + currentCell.Index.ToString();
-				currentCell.SouthWall.transform.parent = southWalls.transform;
+
+				if (x == (0))
+				{
+					currentCell.SouthWall = Instantiate(wallPrefab, CurrentPosition, Quaternion.identity) as GameObject;
+					currentCell.SouthWall.name = "South Wall " + currentCell.Index.ToString();
+					currentCell.SouthWall.transform.parent = southWalls.transform;
+				}
+
+				else
+				{
+					// all other cells simply get a reference to the Northern or Eastern wall of the cell adjacently below or to the left instead
+					currentCell.SouthWall = Cells[x - 1, z].NorthWall;
+					currentCell.SouthWall.name = "South Wall " + currentCell.Index.ToString();
+					//currentCell.SouthWall.transform.parent = southWalls.transform;
+				}
 
 				CurrentPosition = new Vector3(InitialPosition.x + (z * WallLength) - WallLength, 0.0f, InitialPosition.z + (x * WallLength) - WallLength / 2);
-				currentCell.WestWall = Instantiate(wallPrefab, CurrentPosition, Quaternion.identity) as GameObject;
-				currentCell.WestWall.transform.Rotate(0.0f, 90.0f, 0.0f);
-				currentCell.WestWall.name = "West Wall " + currentCell.Index.ToString();
-				currentCell.WestWall.transform.parent = westWalls.transform;
 
-				// but only cells in the last row and column get a north and an east well too
-				if (x == (Rows - 1))
+				if (z == (0))
 				{
-					CurrentPosition = new Vector3(InitialPosition.x + (z * WallLength) - WallLength / 2, 0.0f, InitialPosition.z + (x * WallLength));
-					currentCell.NorthWall = Instantiate(wallPrefab, CurrentPosition, Quaternion.identity) as GameObject;
-					currentCell.NorthWall.name = "North Wall " + currentCell.Index.ToString();
-					currentCell.NorthWall.transform.parent = northWalls.transform;
+					currentCell.WestWall = Instantiate(wallPrefab, CurrentPosition, Quaternion.identity) as GameObject;
+					currentCell.WestWall.transform.Rotate(0.0f, 90.0f, 0.0f);
+					currentCell.WestWall.name = "West Wall " + currentCell.Index.ToString();
+					currentCell.WestWall.transform.parent = westWalls.transform;
 				}
 
-				if (z == (Columns - 1))
+				else
 				{
-					CurrentPosition = new Vector3(InitialPosition.x + (z * WallLength), 0.0f, InitialPosition.z + (x * WallLength) - WallLength / 2);
-					currentCell.EastWall = Instantiate(wallPrefab, CurrentPosition, Quaternion.identity) as GameObject;
-					currentCell.EastWall.transform.Rotate(0.0f, 90.0f, 0.0f);
-					currentCell.EastWall.name = "East Wall " + currentCell.Index.ToString();
-					currentCell.EastWall.transform.parent = eastWalls.transform;
+					currentCell.WestWall = Cells[x, z - 1].EastWall;
+					currentCell.WestWall.name = "West Wall " + currentCell.Index.ToString();
+					//currentCell.WestWall.transform.parent = westWalls.transform;
 				}
-
-				// consider giving each cell's north and east wall a reference to the south and west wall of the cells directly 
-				// above and directly to the right...
 
 				Cells[x, z] = currentCell;
 			}
