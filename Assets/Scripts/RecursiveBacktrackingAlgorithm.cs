@@ -26,39 +26,46 @@ public class RecursiveBacktrackingAlgorithm : MazeAlgorithm {
 		while (VisitedCells < Stack.TotalCells)
 		{
 
-			try
+			//try
+			//{
+			//	availableDirections = Stack.GetListOfUnvisitedNeighbours(CurrentCell);
+			//	neighbour = Stack.GetRandomNeighbour(CurrentCell, availableDirections);
+			//}
+			//catch (Exception e)
+			//{
+			//	CurrentCell = CookieTrail.ElementAt(CookieTrail.Count - 1);
+			//	CookieTrail.RemoveAt(CookieTrail.Count - 1);
+			//	availableDirections = Stack.GetListOfUnvisitedNeighbours(CurrentCell);
+			//	neighbour = Stack.GetRandomNeighbour(CurrentCell, availableDirections);
+			//}
+
+			availableDirections = Stack.GetListOfUnvisitedNeighbours(CurrentCell);
+
+			if(availableDirections.Count > 0)
 			{
-				availableDirections = Stack.GetListOfUnvisitedNeighbours(CurrentCell);
 				neighbour = Stack.GetRandomNeighbour(CurrentCell, availableDirections);
-			}
-			catch (Exception e)
-			{
-				CurrentCell = CookieTrail.ElementAt(CookieTrail.Count - 1);
-				CookieTrail.RemoveAt(CookieTrail.Count - 1);
+
+				if (Stack.CellHasNotBeenVisited(neighbour))
+				{
+					DestroyAdjoiningWall(CurrentCell, neighbour);
+					CookieTrail.Add(CurrentCell); // is this reference or value?
+					CurrentCell = neighbour;
+					CurrentCell.Visited = true;
+					VisitedCells++;
+				}
+				else
+				{
+					CurrentCell = CookieTrail.ElementAt(CookieTrail.Count - 1);
+					CookieTrail.RemoveAt(CookieTrail.Count - 1);
+				}
 			}
 
-			if (Stack.CellHasNotBeenVisited(neighbour)){
-				DestroyAdjoiningWall(CurrentCell, neighbour);
-				CookieTrail.Add(CurrentCell); // is this reference or value?
-				CurrentCell = neighbour;
-				CurrentCell.Visited = true;
-				VisitedCells++;
-			}
 			else
 			{
 				CurrentCell = CookieTrail.ElementAt(CookieTrail.Count - 1);
 				CookieTrail.RemoveAt(CookieTrail.Count - 1);
 			}
 		}
-		// while(VisitedCells < TotalCells)
-		//		if current cell has unvisited neighbour
-		//			DestroyWall(Direction)
-		//			CookieTrail.Add(currentCell)
-		//			CurrentCell = neighbour
-		//			VisitedCells++
-		//			CurrentCell.Visited = true
-		//		else
-		//			CurrentCell = CookieTrail.Pop()
 	}
 
 	public void DestroyAdjoiningWall(Cell currentCell, Cell adjoiningCell)

@@ -29,9 +29,9 @@ public class MazeMaker : MonoBehaviour {
 	public RecursiveBacktrackingAlgorithm recursiveBacktrackingMaze { get; set; }
 
 	// method used to create a grid of cells without any walls to be used with additive maze algorithms
-	public IEnumerator GenerateCells( int rows, int columns)
+	public IEnumerator GenerateCells( int rows, int columns, WaitForSeconds delay)
 	{
-		WaitForSeconds delay = new WaitForSeconds(0.2f);
+		WaitForSeconds waitForSeconds = delay;
 
 		// creates an object for storing the floor tiles of the maze
 		allFloorTiles = new GameObject();
@@ -71,9 +71,9 @@ public class MazeMaker : MonoBehaviour {
 	}
 
 	// method used to create a grid of cells with four walls to be used with destructive maze algorithms
-	public IEnumerator BuildTheEggCarton(int rows, int columns)
+	public IEnumerator BuildTheEggCarton(int rows, int columns, WaitForSeconds delay)
 	{
-		WaitForSeconds delay = new WaitForSeconds(0.2f);
+		WaitForSeconds waitForSeconds = delay;
 
 		// creates an object for storing the walls and floor tiles of the maze
 		allWalls = new GameObject();
