@@ -16,6 +16,7 @@ public class MazeMaker : MonoBehaviour {
 
 	public int Columns { get; private set; }
 	public int Rows { get; private set; }
+
 	public Cell[,] Cells { get; private set; }
 	public int WallLength { get; private set; }
 	public Vector3 BoardCenter { get; private set; }
@@ -93,8 +94,8 @@ public class MazeMaker : MonoBehaviour {
 		allFloorTiles = new GameObject();
 		allFloorTiles.name = "Floor Tiles";
 
-		Columns = 5;
-		Rows = 5;
+		Columns = 3;
+		Rows = 3;
 		WallLength = 2;
 		TotalCells = Rows * Columns;
 		cellCount = 1;
@@ -117,7 +118,6 @@ public class MazeMaker : MonoBehaviour {
 				// the collection of existing cells
 				CurrentPosition = new Vector3(InitialPosition.x + z * WallLength - WallLength / 2, 0.0f,InitialPosition.z + x * WallLength - WallLength / 2);
 				Cell currentCell = new Cell(x, z, cellCount++);
-				Debug.Log("Index: " + currentCell.Index.ToString() + "Row: " + currentCell.Row.ToString() + "Column: " + currentCell.Column.ToString());
 				currentCell.Floor = Instantiate(floorPrefab, CurrentPosition, Quaternion.identity) as GameObject;
 				currentCell.Floor.transform.parent = allFloorTiles.transform;
 				currentCell.Floor.name = "Floor " + currentCell.Index.ToString();

@@ -20,5 +20,6 @@ public class Cell {
 		Column = column;
 		Index = cellCount;
 		Visited = false;
+
 	}
 }

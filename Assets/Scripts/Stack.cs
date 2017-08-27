@@ -40,7 +40,89 @@ public class Stack : MonoBehaviour {
 		return GetCell(index);
 	}
 
-	protected Cell GetNeighbour(int currentIndex, direction dir)
+	// performs a bounds check to see if the cell has an adjacent cell in the direction passed as a parameter
+	protected bool CurrentCellHasNeighbour(Cell currentCell, direction dir) 
+	{
+		// if the current cell is not on one of the mazes edges, the resulting value will always be true
+		bool hasNeighbour = true;
+
+		switch (dir)
+		{
+			case direction.North:
+
+				// checks if the cell is in the last row, there is no northern neighbour if this statement evaluates to true
+				if (currentCell.Row == (Rows - 1))
+					hasNeighbour = false;
+
+				break;
+
+			case direction.South:
+
+				if (currentCell.Row == 0)
+					hasNeighbour = false;
+
+				break;
+
+			case direction.East:
+
+				if (currentCell.Column == Columns - 1)
+					hasNeighbour = false;
+
+				break;
+
+			case direction.West:
+
+				if (currentCell.Column == 0)
+					hasNeighbour = false;
+
+				break;
+		}
+
+		return hasNeighbour;
+	}
+
+	// Returns a boolean indicating weather the adjacent cell in the direction passed as a parameter has not been visited
+	protected bool NeighbourHasNotBeenVisited(Cell currentCell, direction dir)
+	{
+		bool neighbourIsUnvisited = false;
+
+		if (GetNeighbour(currentCell, dir).Visited == false)
+			neighbourIsUnvisited = true;
+
+		return neighbourIsUnvisited;
+	}
+
+	// Returns a collection of directions where the current cell has an adjacent unvisited cell
+	protected List<direction> GetListOfUnvisitedNeighbours(Cell currentCell)
+	{
+		List<direction> validDirections = null;
+
+		if (CurrentCellHasNeighbour(currentCell, direction.North) && NeighbourHasNotBeenVisited(currentCell, direction.North))
+		{
+			validDirections.Add(direction.North);
+		}
+
+		if (CurrentCellHasNeighbour(currentCell, direction.South) && NeighbourHasNotBeenVisited(currentCell, direction.South))
+		{
+			validDirections.Add(direction.South);
+		}
+
+		if (CurrentCellHasNeighbour(currentCell, direction.East) && NeighbourHasNotBeenVisited(currentCell, direction.East))
+		{
+			validDirections.Add(direction.East);
+		}
+
+		if (CurrentCellHasNeighbour(currentCell, direction.West) && NeighbourHasNotBeenVisited(currentCell, direction.West))
+		{
+			validDirections.Add(direction.West);
+		}
+
+		return validDirections;
+	}
+
+	// returns the adjacent cell in the direction passed as a parameter- this method assumes that there is a valid neighbouring cell in the direction
+	// supplied, bounds testing needs to be performed by the calling class with the HasNeighbour() method, prior to calling this method
+	protected Cell GetNeighbour(Cell currentCell, direction dir) 
 	{
 		Cell neighbour = null;
 		int index = 0;
@@ -48,22 +130,22 @@ public class Stack : MonoBehaviour {
 		switch (dir)
 		{
 			case direction.North:
-				index = currentIndex + Columns;
+				index = currentCell.Index + Columns;
 				neighbour = GetCell(index);
 				break;
 
 			case direction.South:
-				index = currentIndex - Columns;
+				index = currentCell.Index - Columns;
 				neighbour = GetCell(index);
 				break;
 
 			case direction.East:
-				index = currentIndex + 1;
+				index = currentCell.Index + 1;
 				neighbour = GetCell(index);
 				break;
 
 			case direction.West:
-				index = currentIndex - 1;
+				index = currentCell.Index - 1;
 				neighbour = GetCell(index);
 				break;
 		}
@@ -71,11 +153,20 @@ public class Stack : MonoBehaviour {
 		return neighbour;
 	}
 
-	public Cell GetRandomNeighbour(int currentIndex)
-	{
-		int index = UnityEngine.Random.Range(1, 4);
+	// Returns an adjacent cell by first choosing a random direction, if that cell has already been visited, the method will instead return a nulled cell
+	protected Cell GetRandomNeighbour(Cell currentCell, List<direction> validDirections)
+	{																  
+		Cell unvisited = null;										  
 
-		return GetNeighbour(currentIndex, (direction)index);
+		foreach(direction dir in validDirections)
+		{
+			if (CurrentCellHasNeighbour(currentCell, dir) && NeighbourHasNotBeenVisited(currentCell, dir))
+			{
+				unvisited = GetNeighbour(currentCell, dir);
+			}
+		}
+
+		return unvisited;
 
 	}
 }
