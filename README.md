@@ -11,9 +11,9 @@ generate a perfect maze in the Unity Editor using the Recursive Backtracking Alg
 
 ### Recursive Backtracking Algorithm
 This is the simplest of the algorithms to implement, and is my recommended starting point for anyone interested in attempting their own
-implementation. It also tends to be the most visually appealing with long passages and fewer dead ends than the other algorithms. To 
-start with you will need to create a collection of floor tiles (or cells as I have named them in my code), each surrounded by four walls, and 
-arrange them in a grid of columns and rows. Then a basic overview of the algorithm is as follows:
+implementation. It also tends to be the most visually appealing with long passages and fewer dead ends than the other algorithms. 
+
+To start with you will need to decide on a size for your maze in the order of x columns * y rows. Create a collection of floor tiles (or cells as I have named them in my code) totalling the product of x and y, each of them surrounded by four walls. Arrange them in an x by y grid- the resulting grid of gameobjects should looks similar to an egg carton when finished. Then a basic overview of the algorithm is as follows:
 
 1. Choose a random starting point from the collection of tiles, and add this tile to a collection of visited tiles for backtracking 
 purposes.
@@ -56,13 +56,13 @@ columns and rows.
 1. Starting with your grid of empty cells encapsulated by a surrounding wall, divide the given space either horizontally or vertically
 by adding enough wall objects to span the entire distance of the maze
 
-2. Delete one of the wall objects to create a single passage through the wall
+2. Choose a random point along this collection of wall objects, and elete one of the wall objects to create a single passage through the wall
 
-3. Divide the space again on either side of the previous wall, once again carving a passage through the new wall by destroying one wall
+3. Choose the space on either side of the existing wall, and divide that space either vertically or horizontally once again, carving a passage through the new wall by destroying one wall object. (It is best to alternate between vertical and horizontal bisections each time you divide a given space)
 
 4. Repeat step 3 recursively until the area you are working on has reached the desired resolution (you can not add any more walls 
 without increasing the number of columns or rows specified prior to creating the maze). Move to any remaining space in the maze that is
-not yet at the desired resolution and continue until no such spaces remain and you have a perfect maze
+not yet at the desired resolution and continue this process until no such spaces remain and you have a perfect maze
 
 
 ### Ellers Algorithm
@@ -73,4 +73,4 @@ For an indepth discussion of the algorithms listed above along with several othe
 by Jamis Buck. He is super knowledgeable on the subject, and does a far better job of explaining the algorithms (and in great detail)
 than I do. He loves mazes so much he took his fascination with maze algorithms as far as writing a book dedicated to the subject- 
 [Mazes For Programmers](http://www.mazesforprogrammers.com/) which can be purchased on Amazon. He also has an interactive intro to the
-topic of maze algorithms [here](http://jamisbuck.org/presentations/rubyconf2011/#title-page).
+topic of maze algorithms that is quite interesting [here](http://jamisbuck.org/presentations/rubyconf2011/#title-page).
