@@ -3,18 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+//using static Stack;
 
-public class RecursiveBacktrackingAlgorithm : MazeAlgorithm {
+public class HuntAndKillAlgorithm : MazeAlgorithm {
 
 	public List<Cell> CookieTrail { get; set; }
+	public List<Stack.Direction> Directions { get; private set; }
 
-	public RecursiveBacktrackingAlgorithm(Cell[,] cells) : base(cells)
+	public HuntAndKillAlgorithm(Cell[,] cells) : base(cells)
 	{
 		CookieTrail = new List<Cell>();
 		CurrentCell = Stack.GetRandomCell();
 		CurrentCell.Visited = true;
 		VisitedCells = 1;
 		IsDestructive = true;
+
+		
+		Directions.Add(Stack.Direction.North); // better way to do this? look into iterating enum types, also consider making Direction enum static?
+		Directions.Add(Stack.Direction.South);
+		Directions.Add(Stack.Direction.East);
+		Directions.Add(Stack.Direction.West);
 	}
 
 	public override void CreateMaze()
@@ -22,11 +30,11 @@ public class RecursiveBacktrackingAlgorithm : MazeAlgorithm {
 		List<Stack.Direction> availableDirections = null;
 		Cell neighbour = null;
 
-		while (VisitedCells < Stack.TotalCells)		// create Coroutine variant for visualising the maze creation as an option in the web player
+		while (VisitedCells < Stack.TotalCells)     // create Coroutine variant for visualising the maze creation as an option in the web player
 		{
 			availableDirections = Stack.GetListOfUnvisitedNeighbours(CurrentCell);
 
-			if(availableDirections.Count > 0)
+			if (availableDirections.Count > 0)
 			{
 				neighbour = Stack.GetRandomNeighbour(CurrentCell, availableDirections);
 
@@ -41,8 +49,8 @@ public class RecursiveBacktrackingAlgorithm : MazeAlgorithm {
 
 				else
 				{
-					CurrentCell = CookieTrail.ElementAt(CookieTrail.Count - 1);
-					CookieTrail.RemoveAt(CookieTrail.Count - 1);
+					Hunt();
+				
 				}
 			}
 
@@ -50,6 +58,24 @@ public class RecursiveBacktrackingAlgorithm : MazeAlgorithm {
 			{
 				CurrentCell = CookieTrail.ElementAt(CookieTrail.Count - 1);
 				CookieTrail.RemoveAt(CookieTrail.Count - 1);
+			}
+		}
+	}
+
+	public void Hunt()
+	{
+		foreach(Cell c in Stack.Cells)
+		{
+			if(c.Visited == false)
+			{
+				foreach(Stack.Direction d in Directions)
+				{
+					if(!Stack.NeighbourHasNotBeenVisited(c, d)) // double negative- add opposing function, or consider changing to a custom return type?
+					{
+						CurrentCell = c;
+						break;
+					}
+				}
 			}
 		}
 	}

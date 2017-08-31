@@ -7,10 +7,10 @@ public abstract class MazeAlgorithm {
 	public Cell CurrentCell { get; set; }
 	public int VisitedCells { get; set; }
 	public Stack Stack { get; set; }
+	public bool IsDestructive { get; protected set; }
 
 	public MazeAlgorithm( Cell[,] cells )
 	{
-
 		Stack = new Stack(cells);
 	}
 

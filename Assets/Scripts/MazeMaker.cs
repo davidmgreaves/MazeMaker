@@ -18,10 +18,12 @@ public class MazeMaker : MonoBehaviour {
 	public int VisitedCells { get; private set; }
 	public int TotalCells { get; private set; }
 	public int CellCount { get; set; }
-	public RecursiveBacktrackingAlgorithm RecursiveBacktrackingMaze { get; set; }
+	public RecursiveBacktrackingAlgorithm RecursiveBacktrackingMaze { get; private set; }
+	public HuntAndKillAlgorithm HuntAndKillMaze { get; private set; }
+	public string SelectedAlgorithm { get; set; }
 
 	// method used to create a grid of cells without any walls to be used with additive maze algorithms
-	public void GenerateCells( int rows, int columns, WaitForSeconds delay) // this should be in its own respective maze algorithms class
+	public void GenerateCells( int rows, int columns, WaitForSeconds delay) 
 	{
 		WaitForSeconds waitForSeconds = delay;
 
@@ -31,9 +33,7 @@ public class MazeMaker : MonoBehaviour {
 		TotalCells = Rows * Columns;
 		CellCount = 1;
 
-		// the grid extends from the initialPosition to the right of the initalPositions x and z location, the initialPosition is effectively
-		// determined by starting at the worlds origin, and moving in the negative of the X and Z directions, by half of the columns and rows 
-		// respectively. This ensures the maze is always centered on the screen, irrespective of the number of rows and columns specified
+		// sets the position for the first cell relative to the origin in world space, such that the maze will always be centered regardless of size
 		InitialPosition = new Vector3(((float) -Columns / 2f) + (float) WallLength / 2f, 0.0f, ((float) -Rows / 2f) + (float) WallLength / 2f);
 
 		CurrentPosition = InitialPosition;
@@ -54,7 +54,7 @@ public class MazeMaker : MonoBehaviour {
 
 		try
 		{
-			LaunchMazeAlgorithm(delay); // additive maze algorithm not instantiated yet, this method call will fail
+			LaunchMazeAlgorithm(SelectedAlgorithm, delay); // additive maze algorithm not instantiated yet, this method call will fail
 		}
 		catch (System.Exception e)
 		{
@@ -129,13 +129,27 @@ public class MazeMaker : MonoBehaviour {
 			}
 		}
 
-		LaunchMazeAlgorithm(delay);
+		LaunchMazeAlgorithm(SelectedAlgorithm, delay);
 	}
 
 	// Selects the appropriate algorithm based on the options selected in the webplayer (unimplemented) and creates the maze
-	public void LaunchMazeAlgorithm(WaitForSeconds delay)						 // this should be part of the maze manager class!
+	public void LaunchMazeAlgorithm(string selectedAlgorithm, WaitForSeconds delay)						 // this should be part of the maze manager class!
 	{
+		switch (selectedAlgorithm)
+		{
+			case "RecursvieBacktracking":
+				break;
+
+			case "HuntAndKill":
+				break;
+
+			case "RecursiveDivision":
+				break;
+		}
+
 		RecursiveBacktrackingMaze = new RecursiveBacktrackingAlgorithm(Cells);   // add code to deal with selecting the appropriate algorithm for when multiple
+		HuntAndKillMaze = new HuntAndKillAlgorithm(Cells);
+
 		RecursiveBacktrackingMaze.CreateMaze();                                  // maze classes are available
 	}
 
