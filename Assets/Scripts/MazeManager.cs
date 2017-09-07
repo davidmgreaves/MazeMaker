@@ -9,6 +9,7 @@ public class MazeManager : MonoBehaviour {
 	public int Rows = 4;    // and no longer need to access the values directly in the inspector
 	public GameObject playerPrefab;
 	public GameObject playerInstance;
+	public EndPoint endPoint;
 	//public Player player;
 	public Vector3 playerStartingPosition; 
 	
@@ -54,6 +55,7 @@ public class MazeManager : MonoBehaviour {
 	{
 		StopAllCoroutines();
 		Destroy(mazeMaker.gameObject);
+		Destroy(playerInstance);
 		LoadMaze();
 	}
 
@@ -61,5 +63,7 @@ public class MazeManager : MonoBehaviour {
 	{
 		//player = new Player(Rows, Columns);
 		Instantiate(playerInstance, mazeMaker.InitialPosition, playerPrefab.transform.rotation);
+		Instantiate(endPoint, new Vector3(Rows + 1, 1, Columns - 3), Quaternion.identity);
+
 	}
 }
