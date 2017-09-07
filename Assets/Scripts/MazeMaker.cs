@@ -148,7 +148,7 @@ public class MazeMaker : MonoBehaviour {
 		}
 
 		RecursiveBacktrackingMaze = new RecursiveBacktrackingAlgorithm(Cells);   // add code to deal with selecting the appropriate algorithm for when multiple
-		HuntAndKillMaze = new HuntAndKillAlgorithm(Cells);
+		//HuntAndKillMaze = new HuntAndKillAlgorithm(Cells); -- address issues in class
 
 		RecursiveBacktrackingMaze.CreateMaze();                                  // maze classes are available
 	}

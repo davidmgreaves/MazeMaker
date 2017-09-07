@@ -84,13 +84,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="MazeMaker.Plugins.csproj">
+      <Project>{4542F35C-FB29-BBBA-E791-022A5DC379F1}</Project>
+      <Name>MazeMaker.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\Scripts\Cell.cs" />
     <Compile Include="Assets\Scripts\HuntAndKillAlgorithm.cs" />
     <Compile Include="Assets\Scripts\MazeAlgorithm.cs" />
     <Compile Include="Assets\Scripts\MazeMaker.cs" />
     <Compile Include="Assets\Scripts\MazeManager.cs" />
+    <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\RecursiveBacktrackingAlgorithm.cs" />
     <Compile Include="Assets\Scripts\Stack.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
+    <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

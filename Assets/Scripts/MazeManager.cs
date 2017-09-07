@@ -7,14 +7,18 @@ public class MazeManager : MonoBehaviour {
 	public MazeMaker mazeMaker;
 	public int Columns = 5; // consider making these properties again when you build a UI for the web player
 	public int Rows = 4;    // and no longer need to access the values directly in the inspector
-
-
+	public GameObject playerPrefab;
+	public GameObject playerInstance;
+	//public Player player;
+	public Vector3 playerStartingPosition; 
+	
 	public WaitForSeconds Delay { get; private set; }
 
 	void Start () {
 
 		mazeMaker.SelectedAlgorithm = "RecursiveBacktracking";
 		Delay = new WaitForSeconds(0f);
+		
 		LoadMaze();
 	}
 
@@ -23,6 +27,11 @@ public class MazeManager : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Return))
 		{
 			RestartMaze();
+		}
+
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			SpawnPlayer();
 		}
 	}
 	
@@ -46,5 +55,11 @@ public class MazeManager : MonoBehaviour {
 		StopAllCoroutines();
 		Destroy(mazeMaker.gameObject);
 		LoadMaze();
+	}
+
+	void SpawnPlayer()
+	{
+		//player = new Player(Rows, Columns);
+		Instantiate(playerInstance, mazeMaker.InitialPosition, playerPrefab.transform.rotation);
 	}
 }
